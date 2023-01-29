@@ -7,10 +7,14 @@ const tasks = ref(JSON.parse(localStorage.getItem('tasks')) || [])
 const taskInput = ref('');
 
 if (!localStorage.getItem('functionExecuted')) {
-  tasks.value.push('Take the laundry')
-  tasks.value.push('Buy groceries')
-  tasks.value.push('Feed the cats')
-  tasks.value.push('Clean out inbox')
+  tasks.value.push({title: 'Take the laundry',
+  isChecked: false})
+  tasks.value.push({title: 'Buy groceries',
+  isChecked: true})
+  tasks.value.push({title: 'Feed the cats',
+  isChecked: true})
+  tasks.value.push({title: 'Clean out inbox',
+  isChecked: false})
   localStorage.setItem('functionExecuted', true);
 }
 
@@ -30,7 +34,10 @@ const handleSubmit = (e) => {
   }
   const form = document.getElementById("taskForm");
   const task = taskInput.value;
-  tasks.value.push(task)
+  tasks.value.push({
+    title: task,
+    isChecked: false,
+  })
   localStorage.setItem('tasks', JSON.stringify(tasks.value))
   form.reset();
 }
@@ -69,7 +76,7 @@ const handleInput = (e) => {
                 ref="taskInput"
                 @input="handleInput"
                 >
-                <button type="button" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none flex-none px-3 py-2 leading-6 rounded-r active:z-1 focus:z-1 border-blue-200 bg-blue-200 text-blue-700 hover:text-blue-700 ">
+                <button type="button" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none flex-none px-3 py-2 leading-6 rounded-r active:z-1 focus:z-1 border-blue-200 bg-blue-200 text-blue-700 hover:text-blue-700 " @click="(e) => handleSubmit(e)">
                   Enter
                 </button>
               </div>
@@ -81,10 +88,10 @@ const handleInput = (e) => {
             
             <li class="bg-white border-gray-200 rounded transition duration-300 ease-in-out hover:scale-[1.02] hover:bg-gray-100 transform-gpu p-4 flex items-center overflow-auto">
               <div class="flex items-center space-x-2">
-                  <input type="checkbox" id="checkbox2" name="checkbox2" class="rounded-full border-none outline-none h-4 w-4">
+                  <input type="checkbox" v-model="task.isChecked" id="checkbox2" name="checkbox2" class="rounded-full border-none outline-none h-4 w-4">
                   <div class="overflow-auto">
-                    <p class="font-semibold text-sm max-w-3/4 overflow-wrap break-word">
-                      {{task}}
+                    <p :style="{ 'text-decoration': task.isChecked ? 'line-through' : 'none' }" class="font-semibold text-sm max-w-3/4 overflow-wrap break-word">
+                      {{task.title}}
                     </p>
                   </div>
               </div>
